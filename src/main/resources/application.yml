@@ -14,3 +14,9 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  signed:
+    key: b75863b8ebbb6b504fec9c9b785daedd988473b0934cad0b27ab96b04d06157d
+  expiration:
+    periodInSeconds: 10800  # 3 Hours

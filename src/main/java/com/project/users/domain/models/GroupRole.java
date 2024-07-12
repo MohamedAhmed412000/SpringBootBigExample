@@ -3,6 +3,7 @@ package com.project.users.domain.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -23,5 +24,8 @@ public class GroupRole {
 
     @Column(name = "GROUP_AR_NAME")
     private String nameAr;
+
+    @OneToMany(mappedBy = "groupRole", fetch = FetchType.LAZY)
+    private Set<UserGroupRole> roles;
 
 }

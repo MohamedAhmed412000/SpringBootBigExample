@@ -18,7 +18,7 @@ public class UserGroupRole {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("groupId")
     @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID", nullable = false)
-    private GroupRole group;
+    private GroupRole groupRole;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("roleId")

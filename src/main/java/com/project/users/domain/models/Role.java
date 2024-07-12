@@ -4,6 +4,7 @@ import com.project.users.domain.enums.UserRoleEnum;
 import com.project.users.domain.enums.converters.UserRoleEnumConverter;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Set;
 import java.util.UUID;
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "\"ROLE\"")
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @Column(name = "ID", columnDefinition = "uuid", nullable = false, updatable = false, unique = true)
@@ -26,5 +27,10 @@ public class Role {
 
     @Column(name = "ROLE_AR_NAME")
     private String nameAr;
+
+    @Override
+    public String getAuthority() {
+        return code;
+    }
 
 }
