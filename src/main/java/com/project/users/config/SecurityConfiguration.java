@@ -1,10 +1,14 @@
 package com.project.users.config;
 
+import com.project.users.domain.enums.UserPermissionCodeEnum;
+import com.project.users.domain.enums.UserRoleCodeEnum;
+import com.project.users.domain.enums.UserRoleEnum;
 import com.project.users.filters.JwtAuthenticationFilter;
 import com.project.users.services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,10 +37,13 @@ public class SecurityConfiguration {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(
                 request -> request
-                    .requestMatchers("/api/v1/auth/**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
+                    .requestMatchers("/api/v1/auth/**").permitAll()
+                    .requestMatchers("/api/v1/admin/**").hasRole(UserRoleCodeEnum.ADMIN.getValue())
+                    .requestMatchers("/api/v1/manager/**").hasAnyRole(UserRoleCodeEnum.MANAGER.getValue(), UserRoleCodeEnum.ADMIN.getValue())
+                    .requestMatchers(HttpMethod.POST, "**").hasAuthority(UserPermissionCodeEnum.WRITE.getValue())
+                    .requestMatchers(HttpMethod.PUT, "**").hasAuthority(UserPermissionCodeEnum.MODIFY.getValue())
+                    .requestMatchers(HttpMethod.DELETE, "**").hasAuthority(UserPermissionCodeEnum.DELETE.getValue())
+                    .anyRequest().authenticated()
             )
             .sessionManagement(
                 session -> session

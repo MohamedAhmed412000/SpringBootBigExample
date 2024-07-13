@@ -1,5 +1,6 @@
 package com.project.users.services.impl;
 
+import com.project.users.domain.enums.UserRoleCodeEnum;
 import com.project.users.domain.enums.UserRoleEnum;
 import com.project.users.domain.models.User;
 import com.project.users.inbound.requests.AuthenticationRequest;
@@ -25,19 +26,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final JwtUtilsService jwtUtilsService;
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     @Override
     public AuthenticationResponse register(RegistrationRequest request) {
+
         var user = User.builder()
-                .firstName(request.getFirstname())
-                .lastName(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .userType(UserRoleEnum.USER)
-                .userGroupRoles(new HashSet<>())
-                .build();
+            .firstName(request.getFirstname())
+            .lastName(request.getLastname())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .userType(new UserRoleEnum(UserRoleCodeEnum.USER.getValue()))
+            .build();
         userRepository.save(user);
         String accessToken = jwtUtilsService.generateToken(user);
         return AuthenticationResponse.builder()

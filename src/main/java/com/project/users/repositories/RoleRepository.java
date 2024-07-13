@@ -11,11 +11,17 @@ import java.util.UUID;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, UUID> {
 
-    @Query("SELECT DISTINCT r.code FROM User u " +
-            "JOIN UserGroupRoleUser ugru ON ugru.user.id = u.id " +
-            "JOIN UserGroupRole ugr ON ugr.groupRole.id = ugru.userGroupRole.id " +
+    @Query("SELECT DISTINCT r FROM User u " +
+            "JOIN GroupRole gr ON gr.code = u.userType " +
+            "JOIN UserGroupRole ugr ON ugr.groupRole.id = gr.id " +
             "JOIN Role r ON ugr.role.id = r.id " +
             "WHERE u.id = :userId")
-    Set<String> findUserRolesByUserId(UUID userId);
+    Set<Role> findUserRolesByUserId(UUID userId);
+
+    @Query("SELECT DISTINCT r.code FROM Role r " +
+            "JOIN UserGroupRole ugr ON ugr.role.id = r.id " +
+            "JOIN GroupRole gr ON gr.id = ugr.groupRole.id " +
+            "WHERE gr.code = :code")
+    Set<String> findUserPermissionsByRoleFromDatabase(String code);
 
 }

@@ -7,7 +7,7 @@ public class UserRoleEnumConverter implements AttributeConverter<UserRoleEnum, S
 
     @Override
     public String convertToDatabaseColumn(UserRoleEnum attribute) {
-        return attribute.getValue();
+        return attribute.value();
     }
 
     @Override

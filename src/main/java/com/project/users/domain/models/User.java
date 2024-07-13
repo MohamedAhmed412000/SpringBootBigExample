@@ -1,6 +1,9 @@
 package com.project.users.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.project.users.domain.enums.UserRoleEnum;
+import com.project.users.domain.enums.config.UserPermissionEnumConfig;
 import com.project.users.domain.enums.converters.UserRoleEnumConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "\"USER\"")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class User implements UserDetails {
 
     @Id
@@ -40,6 +44,7 @@ public class User implements UserDetails {
     @Column(name = "USERNAME", unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(name = "PASSWORD")
     private String password;
 
@@ -47,15 +52,9 @@ public class User implements UserDetails {
     @Column(name = "TYPE")
     private UserRoleEnum userType;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<UserGroupRoleUser> userGroupRoles;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userGroupRoles.stream()
-                .map(UserGroupRoleUser::getUserGroupRole)
-                .map(UserGroupRole::getRole)
-                .collect(Collectors.toSet());
+        return UserPermissionEnumConfig.getUserPermissions(userType);
     }
 
     @Override

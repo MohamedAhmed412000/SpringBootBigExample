@@ -1,25 +1,16 @@
 package com.project.users.domain.enums;
 
-import lombok.Getter;
+import com.project.users.domain.enums.config.UserRoleEnumConfig;
 
-@Getter
-public enum UserRoleEnum {
-    ADMIN("ADMIN"),
-    USER("USER"),;
-
-    private final String value;
-
-    UserRoleEnum(String value) {
-        this.value = value;
-    }
+public record UserRoleEnum(String value) {
 
     public static UserRoleEnum fromValue(String value) {
-        for (UserRoleEnum type : values()) {
-            if (type.getValue().equalsIgnoreCase(value)) {
-                return type;
+        for (String groupRole : UserRoleEnumConfig.roles) {
+            if (groupRole.equalsIgnoreCase(value)) {
+                return new UserRoleEnum(value);
             }
         }
-        return USER;
+        return null;
     }
 
 }
